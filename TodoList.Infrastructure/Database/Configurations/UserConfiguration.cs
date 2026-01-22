@@ -10,7 +10,7 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.ToTable(t => 
-            t.HasCheckConstraint("CK_User_Email_Format", "Email LIKE %_@%_.%_"));
+            t.HasCheckConstraint("CK_User_Email_Format", "Email LIKE '%_@%_.%_'"));
 
         builder.HasKey(u => u.Id);
 
@@ -26,7 +26,6 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(100);
 
         builder.Property(u => u.Role)
-            .IsRequired()
             .HasDefaultValue(UserRole.User);
 
         builder.Property(u => u.Lastname)
