@@ -53,6 +53,9 @@ builder.Services.AddCors(options =>
 // Injection de dépendance
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITodoRepository, TodoRepository>();
+builder.Services.AddScoped<ITodoService, TodoService>();
+
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -72,7 +75,5 @@ app.UseCors(); // Permet d'utiliser les CORS
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.MapGet("/", () => new { message = "Coucou" });
 
 app.Run();

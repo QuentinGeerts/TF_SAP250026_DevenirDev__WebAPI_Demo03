@@ -5,12 +5,8 @@ using TodoList.Infrastructure.Database;
 
 namespace TodoList.Infrastructure.Repositories;
 
-public class UserRepository : BaseRepository<User, Guid>, IUserRepository
+public class UserRepository(TodoListContext context) : BaseRepository<User, Guid>(context), IUserRepository
 {
-    public UserRepository(TodoListContext context) : base(context)
-    {
-    }
-
     public async Task<User?> GetUserByEmail(string email)
     {
         return await _entities.FirstOrDefaultAsync(e => e.Email == email);

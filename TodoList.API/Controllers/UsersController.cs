@@ -2,6 +2,12 @@
 using TodoList.Core.Interfaces.Services;
 using TodoList.Domain.Entities;
 
+// TODO:
+// - Implémenter les méthodes PUT et POST
+// - Changer les types de retour des méthodes GET, PUT et POST pour utiliser des DTOs au lieu des entités directement (utilisation de Mappers)
+// - Implémenter le Hashing des mots de passe lors de la création et de la mise à jour des utilisateurs
+// - Implémenter le système d'authentification et d'autorisation (JWT)
+
 namespace TodoList.API.Controllers
 {
     [Route("api/[controller]")]
@@ -20,7 +26,7 @@ namespace TodoList.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<User>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            var users = await _userService.GetAllUsers();
+            var users = await _userService.GetAllAsync();
             return Ok(users);
         }
 
@@ -30,7 +36,7 @@ namespace TodoList.API.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<User>> GetUser([FromRoute] Guid id)
         {
-            var existingUser = await _userService.GetById(id);
+            var existingUser = await _userService.GetByIdAsync(id);
             if (existingUser == null)
                 return NotFound();
 
@@ -42,6 +48,7 @@ namespace TodoList.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(Guid id, User user)
         {
+            // TODO
             return Ok();
 
         }
@@ -50,6 +57,7 @@ namespace TodoList.API.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
+            // TODO
             return Ok();
         }
 
@@ -57,10 +65,9 @@ namespace TodoList.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
-
             try
             {
-                await _userService.Delete(id);
+                await _userService.DeleteAsync(id);
                 return Ok();
             }
             catch (KeyNotFoundException ex)

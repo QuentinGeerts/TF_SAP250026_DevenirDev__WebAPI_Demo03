@@ -6,22 +6,33 @@ namespace TodoList.Core.Services.Data;
 
 public class UserService(IUserRepository _userRespository) : IUserService
 {
-    public async Task Delete(Guid id)
+    public async Task<User> CreateAsync(User user)
     {
-        var user = await _userRespository.GetById(id);
-
-        if (user == null) throw new KeyNotFoundException("Id not found");
-
-        await _userRespository.Delete(user.Id);
+        // TODO
+        throw new NotImplementedException();
     }
 
-    public async Task<IEnumerable<User>> GetAllUsers()
+    public async Task DeleteAsync(Guid id)
     {
-        return await _userRespository.GetAll();
+        var existingUser = await _userRespository.ExistsAsync(id);
+        if (!existingUser) throw new KeyNotFoundException("Id not found");
+        await _userRespository.DeleteAsync(id);
     }
 
-    public async Task<User?> GetById(Guid id)
+    public async Task<IEnumerable<User>> GetAllAsync()
     {
-        return await _userRespository.GetById(id);
+        return await _userRespository.GetAllAsync();
+    }
+
+    public async Task<User?> GetByIdAsync(Guid id)
+    {
+        return await _userRespository.GetByIdAsync(id);
+        throw new NotImplementedException();
+    }
+
+    public Task UpdateAsync(Guid id, User user)
+    {
+        // TODO
+        throw new NotImplementedException();
     }
 }

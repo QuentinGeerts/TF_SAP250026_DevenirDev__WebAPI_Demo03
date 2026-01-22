@@ -2,7 +2,7 @@
 
 namespace TodoList.Core.Interfaces.Services;
 
-public interface IUserService : IBaseService<User, Guid>
+public interface ITodoService : IBaseService<Todo, Guid>
 {
 
 }

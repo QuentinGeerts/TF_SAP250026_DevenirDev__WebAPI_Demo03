@@ -1,30 +1,29 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using TodoList.Core.Interfaces.Repositories;
 using TodoList.Infrastructure.Database;
 
 namespace TodoList.Infrastructure.Repositories;
 
-public class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey>
+public class BaseRepository<TEntity, TKey>(TodoListContext _context) : IBaseRepository<TEntity, TKey>
     where TEntity : class
 {
 
-    protected TodoListContext _context;
-    protected DbSet<TEntity> _entities;
+    protected DbSet<TEntity> _entities = _context.Set<TEntity>();
 
-    public BaseRepository(TodoListContext context)
-    {
-        _context = context;
-        _entities = _context.Set<TEntity>();
-    }
-
-    public async Task<TEntity> Create(TEntity entity)
+    public async Task<TEntity> AddAsync(TEntity entity)
     {
         await _entities.AddAsync(entity);
         await _context.SaveChangesAsync();
         return entity;
     }
 
-    public async Task Delete(TKey id)
+    public async Task<int> CountAsync()
+    {
+        return await _entities.CountAsync();
+    }
+
+    public async Task DeleteAsync(TKey id)
     {
         var entity = await _entities.FindAsync(id);
         if (entity != null)
@@ -34,17 +33,27 @@ public class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey>
         }
     }
 
-    public async Task<IEnumerable<TEntity>> GetAll()
+    public async Task<bool> ExistsAsync(TKey id)
+    {
+        return await Task.FromResult(_entities.Find(id) != null);
+    }
+
+    public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        return await Task.FromResult(_entities.Where(predicate).AsEnumerable());
+    }
+
+    public async Task<IEnumerable<TEntity>> GetAllAsync()
     {
         return await _entities.ToListAsync();
     }
 
-    public async Task<TEntity?> GetById(TKey id)
+    public async Task<TEntity?> GetByIdAsync(TKey id)
     {
         return await _entities.FindAsync(id);
     }
 
-    public async Task Update(TKey id, TEntity entity)
+    public async Task UpdateAsync(TKey id, TEntity entity)
     {
         _entities.Update(entity);
         await _context.SaveChangesAsync();

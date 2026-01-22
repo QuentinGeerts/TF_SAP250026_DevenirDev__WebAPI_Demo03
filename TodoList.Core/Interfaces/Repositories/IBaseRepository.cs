@@ -1,12 +1,19 @@
-﻿namespace TodoList.Core.Interfaces.Repositories;
+﻿using System.Linq.Expressions;
+
+namespace TodoList.Core.Interfaces.Repositories;
 
 public interface IBaseRepository<TEntity, TKey>
     where TEntity : class
 {
     // Create | Read (All, ById) | Update | Delete
-    Task<TEntity> Create(TEntity entity);
-    Task<IEnumerable<TEntity>> GetAll();
-    Task<TEntity?> GetById(TKey id);
-    Task Update(TKey id, TEntity entity);
-    Task Delete(TKey id);
+    Task<IEnumerable<TEntity>> GetAllAsync();
+    Task<TEntity?> GetByIdAsync(TKey id);
+    Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<bool> ExistsAsync(TKey id);
+    Task<int> CountAsync();
+
+
+    Task<TEntity> AddAsync(TEntity entity);
+    Task UpdateAsync(TKey id, TEntity entity);
+    Task DeleteAsync(TKey id);
 }
