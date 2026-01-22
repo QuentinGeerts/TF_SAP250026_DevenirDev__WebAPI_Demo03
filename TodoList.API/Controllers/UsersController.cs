@@ -24,6 +24,7 @@ namespace TodoList.API.Controllers
         // GET: api/Users
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<User>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             var users = await _userService.GetAllAsync();
@@ -34,6 +35,7 @@ namespace TodoList.API.Controllers
         [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<User>> GetUser([FromRoute] Guid id)
         {
             var existingUser = await _userService.GetByIdAsync(id);
@@ -46,24 +48,34 @@ namespace TodoList.API.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(Guid id, User user)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> PutUser([FromRoute] Guid id, [FromBody] User user)
         {
             // TODO
-            return Ok();
+            return NoContent();
 
         }
 
         // POST: api/Users
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        [ProducesResponseType(typeof(User), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<User>> PostUser([FromBody] User user)
         {
             // TODO
-            return Ok();
+            return Created();
         }
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(Guid id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteUser([FromRoute] Guid id)
         {
             try
             {
@@ -74,11 +86,6 @@ namespace TodoList.API.Controllers
             {
                 return NotFound(new { Error = ex.Message });
             }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-
         }
     }
 }

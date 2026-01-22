@@ -10,6 +10,8 @@ namespace TodoList.API.Controllers
     {
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<Todo>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<Todo>>> GetTodos()
         {
             var todos = await _todoService.GetAllAsync();
@@ -17,6 +19,9 @@ namespace TodoList.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Todo), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Todo>> GetTodo([FromRoute] Guid id)
         {
             var todo = await _todoService.GetByIdAsync(id);
@@ -25,20 +30,31 @@ namespace TodoList.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodo(Guid id, Todo todo)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> PutTodo([FromRoute] Guid id, [FromBody] Todo todo)
         {
             // TODO
-            return Ok();
+            return NoContent();
         }
 
         [HttpPost]
-        public async Task<ActionResult<Todo>> PostTodo(Todo todo)
+        [ProducesResponseType(typeof(Todo), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<Todo>> PostTodo([FromBody] Todo todo)
         {
             // TODO
-            return Ok();
+            return Created();
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteTodo(Guid id)
         {
             try
@@ -49,10 +65,6 @@ namespace TodoList.API.Controllers
             catch (KeyNotFoundException ex)
             {
                 return NotFound(new { Error = ex.Message });
-            }
-            catch (Exception)
-            {
-                return BadRequest();
             }
         }
     }

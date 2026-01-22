@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using System.Text.Json;
 using TodoList.Core.Interfaces.Repositories;
 using TodoList.Core.Interfaces.Services;
 using TodoList.Core.Services.Data;
@@ -67,6 +68,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+
 
 app.UseHttpsRedirection();
 
