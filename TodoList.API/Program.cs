@@ -1,6 +1,14 @@
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using TodoList.Infrastructure.Database;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Ajout de la connectionString via l'injection de dépendance
+// => L'instance de TodoList sera fournie dans le constructeur de la classe qui a
+// besoin de TodoListContext avec la configuration du provider + connectionString
+builder.Services.AddDbContext<TodoListContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 // Gestion des cors
 builder.Services.AddCors(options =>
