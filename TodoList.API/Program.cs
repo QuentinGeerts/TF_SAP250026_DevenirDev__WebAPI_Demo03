@@ -28,7 +28,7 @@ builder.Services.AddCors(options =>
 
     var allowedOrigins = builder.Configuration
         .GetSection("Cors:AllowedOrigins")
-        .Get<string>() ?? throw new InvalidOperationException("Cors not configured.");
+        .Get<string[]>() ?? throw new InvalidOperationException("Cors not configured.");
 
     options.AddDefaultPolicy(policy =>
         policy
