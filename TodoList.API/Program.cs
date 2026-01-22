@@ -1,6 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using TodoList.Core.Interfaces.Repositories;
+using TodoList.Core.Interfaces.Services;
+using TodoList.Core.Services.Data;
 using TodoList.Infrastructure.Database;
+using TodoList.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +49,10 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
     );
 });
+
+// Injection de dépendance
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
