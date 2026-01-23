@@ -18,7 +18,7 @@ namespace TodoList.Infrastructure.Database.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Role = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
+                    Role = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Lastname = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Firstname = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
                 },

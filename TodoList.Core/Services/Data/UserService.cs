@@ -30,9 +30,8 @@ public class UserService(IUserRepository _userRespository) : IUserService
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(Guid id, User user)
+    public async Task UpdateAsync(Guid id, User user)
     {
-        // TODO
-        throw new NotImplementedException();
+        await _userRespository.UpdateAsync(id, user);
     }
 }

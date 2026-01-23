@@ -12,7 +12,7 @@ using TodoList.Infrastructure.Database;
 namespace TodoList.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(TodoListContext))]
-    [Migration("20260122133201_InitialMigration")]
+    [Migration("20260123085454_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -92,7 +92,7 @@ namespace TodoList.Infrastructure.Database.Migrations
                     b.Property<int>("Role")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(1);
+                        .HasDefaultValue(0);
 
                     b.HasKey("Id");
 

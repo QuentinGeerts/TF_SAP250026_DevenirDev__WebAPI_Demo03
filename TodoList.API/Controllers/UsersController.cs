@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TodoList.API.DTOs.Requests;
+using TodoList.API.DTOs.Responses;
+using TodoList.API.Mappers;
 using TodoList.Core.Interfaces.Services;
 using TodoList.Domain.Entities;
 
@@ -23,27 +26,27 @@ namespace TodoList.API.Controllers
 
         // GET: api/Users
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<User>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<UserResponseDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetUsers()
         {
             var users = await _userService.GetAllAsync();
-            return Ok(users);
+            return Ok(users.ToUserResponseDtos());
         }
 
         // GET: api/Users/5
         [HttpGet("{id:guid}")]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<User>> GetUser([FromRoute] Guid id)
+        public async Task<ActionResult<UserResponseDto>> GetUser([FromRoute] Guid id)
         {
             var existingUser = await _userService.GetByIdAsync(id);
             if (existingUser == null)
                 return NotFound();
 
-            return Ok(existingUser);
-
+            //return Ok(UserMapperExtensions.ToUserResponseDto(existingUser));
+            return Ok(existingUser.ToUserResponseDto());
         }
 
         // PUT: api/Users/5
@@ -52,9 +55,21 @@ namespace TodoList.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> PutUser([FromRoute] Guid id, [FromBody] User user)
+        public async Task<IActionResult> PutUser([FromRoute] Guid id, [FromBody] UpdateUserRequestDto request)
         {
-            // TODO
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userService.GetByIdAsync(id);
+            if (user == null)
+                return NotFound(new { Message = "Utilisateur introuvable." });
+
+            user.Email = request.Email;
+            user.Lastname = request.Lastname;
+            user.Firstname = request.Firstname;
+
+            await _userService.UpdateAsync(id, user);
+
             return NoContent();
 
         }
