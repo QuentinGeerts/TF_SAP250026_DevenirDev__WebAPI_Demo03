@@ -3,7 +3,11 @@ using Scalar.AspNetCore;
 using System.Text.Json;
 using TodoList.Core.Interfaces.Repositories;
 using TodoList.Core.Interfaces.Services;
+using TodoList.Core.Interfaces.Services.Auth;
+using TodoList.Core.Interfaces.Services.Tools;
+using TodoList.Core.Services.Auth;
 using TodoList.Core.Services.Data;
+using TodoList.Core.Services.Tools;
 using TodoList.Infrastructure.Database;
 using TodoList.Infrastructure.Repositories;
 
@@ -56,6 +60,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 builder.Services.AddScoped<ITodoService, TodoService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IPasswordHasherService, PasswordHasherService>();
 
 
 builder.Services.AddControllers();
