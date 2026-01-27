@@ -45,7 +45,7 @@ public class PasswordHasherService : IPasswordHasherService
 
     public bool VerifyPassword(string password, string storedPassword)
     {
-        byte[] hash = Convert.FromBase64String(password);
+        byte[] hash = Convert.FromBase64String(storedPassword);
         
         byte[] salt = new byte[SaltSize];
         Array.Copy(hash, 0, salt, 0, SaltSize);
