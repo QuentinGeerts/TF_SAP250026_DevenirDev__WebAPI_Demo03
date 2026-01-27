@@ -45,16 +45,16 @@ public class PasswordHasherService : IPasswordHasherService
 
     public bool VerifyPassword(string password, string storedPassword)
     {
-        byte[] hash = Convert.FromBase64String(storedPassword);
-        
+        byte[] hashWithSalt = Convert.FromBase64String(storedPassword);
+
         byte[] salt = new byte[SaltSize];
-        Array.Copy(hash, 0, salt, 0, SaltSize);
+        Array.Copy(hashWithSalt, 0, salt, 0, SaltSize);
 
-        byte[] passwordHash = new byte[HashSize];
-        Array.Copy(hash, SaltSize, passwordHash, 0, HashSize);
+        byte[] storedHash = new byte[HashSize];
+        Array.Copy(hashWithSalt, SaltSize, storedHash, 0, HashSize);
 
-        byte[] computed = HashPasswordWithSalt(password, salt);
+        byte[] computedHash = HashPasswordWithSalt(password, salt);
 
-        return CryptographicOperations.FixedTimeEquals(hash, computed);
+        return CryptographicOperations.FixedTimeEquals(storedHash, computedHash);
     }
 }
