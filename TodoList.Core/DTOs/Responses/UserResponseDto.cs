@@ -1,4 +1,4 @@
-﻿namespace TodoList.API.DTOs.Responses;
+﻿namespace TodoList.Core.DTOs.Responses;
 
 public class UserResponseDto
 {

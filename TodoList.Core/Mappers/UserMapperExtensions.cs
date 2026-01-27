@@ -1,4 +1,4 @@
-﻿using TodoList.API.DTOs.Responses;
+﻿using TodoList.Core.DTOs.Responses;
 using TodoList.Domain.Entities;
 
 namespace TodoList.API.Mappers;

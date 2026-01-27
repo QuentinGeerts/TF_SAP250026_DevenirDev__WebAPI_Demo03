@@ -1,68 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
-using System.Text.Json;
-using TodoList.Core.Interfaces.Repositories;
-using TodoList.Core.Interfaces.Services;
-using TodoList.Core.Interfaces.Services.Auth;
-using TodoList.Core.Interfaces.Services.Tools;
-using TodoList.Core.Services.Auth;
-using TodoList.Core.Services.Data;
-using TodoList.Core.Services.Tools;
-using TodoList.Infrastructure.Database;
-using TodoList.Infrastructure.Repositories;
+using TodoList.API.Extensions;
+using TodoList.Core;
+using TodoList.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Ajout de la connectionString via l'injection de dépendance
-// => L'instance de TodoList sera fournie dans le constructeur de la classe qui a
-// besoin de TodoListContext avec la configuration du provider + connectionString
-builder.Services.AddDbContext<TodoListContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+// Configuration du Core et Infrastructure (méthodes d'extension)
+builder.Services.ConfigureCore();
+builder.Services.ConfigureInfrastructure(builder.Configuration);
 
-// Gestion des cors
-builder.Services.AddCors(options =>
-{
-    // Configuration des CORS
-
-    // Pour le développement uniquement
-    //options.AddDefaultPolicy(policy => 
-    //    policy
-    //        .AllowAnyOrigin()
-    //        .AllowAnyHeader()
-    //        .AllowAnyMethod());
-
-    //options.AddDefaultPolicy(policy =>
-    //    policy
-    //        .WithOrigins(
-    //            "http://localhost:4200", // Angular
-    //            "http://localhost:3000", // React
-    //            "http://localhost:5500" // Javascript (LiveService
-    //        )
-    //        .AllowAnyHeader()
-    //        .AllowAnyMethod());
-
-    // Avec une configuration dans le appsettings
-
-    var allowedOrigins = builder.Configuration
-        .GetSection("Cors:AllowedOrigins")
-        .Get<string[]>() ?? throw new InvalidOperationException("Cors not configured.");
-
-    options.AddDefaultPolicy(policy =>
-        policy
-            .WithOrigins(allowedOrigins)
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-    );
-});
-
-// Injection de dépendance
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<ITodoRepository, TodoRepository>();
-builder.Services.AddScoped<ITodoService, TodoService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IPasswordHasherService, PasswordHasherService>();
-
+// Configuration des cors
+builder.Services.ConfigureCorsPolicy(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -75,13 +24,10 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-
 app.UseHttpsRedirection();
 
-app.UseCors(); // Permet d'utiliser les CORS
-
+app.UseCors("CorsPolicy"); // Permet d'utiliser les CORS
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

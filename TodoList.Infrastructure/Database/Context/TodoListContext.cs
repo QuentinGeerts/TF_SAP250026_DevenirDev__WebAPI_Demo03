@@ -1,17 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TodoList.Domain.Entities;
 
-namespace TodoList.Infrastructure.Database;
+namespace TodoList.Infrastructure.Database.Context;
 
 public class TodoListContext : DbContext
 {
-    public TodoListContext(DbContextOptions options) : base(options)
-    {
-    }
-
-    protected TodoListContext()
-    {
-    }
+    public TodoListContext(DbContextOptions options) : base(options) { }
 
     public DbSet<Todo> Todos { get; set; }
     public DbSet<User> Users { get; set; }

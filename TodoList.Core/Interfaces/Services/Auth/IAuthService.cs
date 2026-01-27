@@ -1,8 +1,9 @@
-﻿using TodoList.Domain.Entities;
+﻿using TodoList.Core.DTOs.Requests;
+using TodoList.Domain.Entities;
 
 namespace TodoList.Core.Interfaces.Services.Auth;
 
 public interface IAuthService
 {
-    Task<User> Register(string email, string password);
+    Task<User> Register(RegisterRequestDto credentials);
 }

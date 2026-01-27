@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using TodoList.Core.Interfaces.Repositories;
-using TodoList.Infrastructure.Database;
+using TodoList.Infrastructure.Database.Context;
 
 namespace TodoList.Infrastructure.Repositories;
 
 public class BaseRepository<TEntity, TKey>(TodoListContext _context) : IBaseRepository<TEntity, TKey>
     where TEntity : class
+    where TKey : struct
 {
 
     protected DbSet<TEntity> _entities = _context.Set<TEntity>();

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TodoList.Core.Interfaces.Repositories;
 using TodoList.Domain.Entities;
-using TodoList.Infrastructure.Database;
+using TodoList.Infrastructure.Database.Context;
 
 namespace TodoList.Infrastructure.Repositories;
 

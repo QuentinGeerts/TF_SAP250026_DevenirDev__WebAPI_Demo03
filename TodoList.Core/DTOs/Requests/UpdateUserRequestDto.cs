@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TodoList.API.DTOs.Requests;
+namespace TodoList.Core.DTOs.Requests;
 
 public class UpdateUserRequestDto
 {

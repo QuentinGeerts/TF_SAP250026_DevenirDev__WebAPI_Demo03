@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using TodoList.API.DTOs.Requests;
+﻿using Microsoft.AspNetCore.Mvc;
+using TodoList.Core.DTOs.Requests;
 using TodoList.Core.Interfaces.Services;
 using TodoList.Core.Interfaces.Services.Auth;
 
@@ -15,18 +14,15 @@ public class AuthController(
 {
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register (RegisterRequestDto request)
+    public async Task<IActionResult> Register(RegisterRequestDto request)
     {
-		try
-		{
+        try
+        {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var createdUser = await _authService.Register(request.Email, request.Password);
-            createdUser.Lastname = request.Lastname;
-            createdUser.Firstname = request.Firstname;
+            var createdUser = await _authService.Register(request);
 
-            await _userService.UpdateAsync(createdUser.Id, createdUser);
             return CreatedAtAction(
                 actionName: "GetUser",
                 controllerName: "Users",
@@ -34,10 +30,10 @@ public class AuthController(
                 value: createdUser
                 );
         }
-		catch (Exception ex)
-		{
+        catch (Exception ex)
+        {
             return Conflict(new { ex.Message });
-		}
+        }
     }
 
 }

@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Configuration;
 
-namespace TodoList.API.DTOs.Requests;
+namespace TodoList.Core.DTOs.Requests;
 
 public class RegisterRequestDto
 {
@@ -9,7 +8,8 @@ public class RegisterRequestDto
     [EmailAddress(ErrorMessage = "Le format est incorrect.")]
     public string Email { get; set; } = null!;
 
-    [RegexStringValidator("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")]
+    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?=&])[A-Za-z\d@$!%*?=&]{8,}$",
+        ErrorMessage = "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial")]
     public string Password { get; set; } = null!;
 
 

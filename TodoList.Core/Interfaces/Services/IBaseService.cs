@@ -2,6 +2,7 @@
 
 public interface IBaseService<TEntity, TKey>
     where TEntity : class
+    where TKey : struct
 {
     Task<IEnumerable<TEntity>> GetAllAsync();
     Task<TEntity?> GetByIdAsync(Guid id);

@@ -4,6 +4,7 @@ namespace TodoList.Core.Interfaces.Repositories;
 
 public interface IBaseRepository<TEntity, TKey>
     where TEntity : class
+    where TKey : struct
 {
     // Create | Read (All, ById) | Update | Delete
     Task<IEnumerable<TEntity>> GetAllAsync();

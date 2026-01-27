@@ -1,4 +1,5 @@
-﻿using TodoList.Core.Interfaces.Repositories;
+﻿using TodoList.Core.DTOs.Requests;
+using TodoList.Core.Interfaces.Repositories;
 using TodoList.Core.Interfaces.Services.Auth;
 using TodoList.Core.Interfaces.Services.Tools;
 using TodoList.Domain.Entities;
@@ -11,20 +12,22 @@ public class AuthService (
     IPasswordHasherService _passwordHasherService
     ) : IAuthService
 {
-    public async Task<User> Register(string email, string password)
+    public async Task<User> Register(RegisterRequestDto credentials)
     {
-        var existingUser = await _userRepository.GetUserByEmail(email);
+        var existingUser = await _userRepository.GetUserByEmail(credentials.Email);
         if (existingUser != null)
             throw new InvalidOperationException("L'email est déjà utilisée");
 
-        var hashedPassword = _passwordHasherService.HashPassword(password);
+        var hashedPassword = _passwordHasherService.HashPassword(credentials.Password);
 
         var user = new User
         {
             Id = Guid.NewGuid(),
-            Email = email,
+            Email = credentials.Email,
             Password = hashedPassword,
-            Role = UserRole.User
+            Role = UserRole.User,
+            Firstname = credentials.Firstname,
+            Lastname = credentials.Lastname
         };
 
         return await _userRepository.AddAsync(user);

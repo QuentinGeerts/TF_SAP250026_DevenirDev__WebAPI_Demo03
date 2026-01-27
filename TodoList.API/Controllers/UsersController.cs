@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TodoList.API.DTOs.Requests;
-using TodoList.API.DTOs.Responses;
 using TodoList.API.Mappers;
+using TodoList.Core.DTOs.Requests;
+using TodoList.Core.DTOs.Responses;
 using TodoList.Core.Interfaces.Services;
-using TodoList.Domain.Entities;
 
 // TODO:
 // - Implémenter les méthodes PUT et POST
@@ -15,15 +14,8 @@ namespace TodoList.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController(IUserService _userService) : ControllerBase
     {
-        private IUserService _userService;
-
-        public UsersController(IUserService userService)
-        {
-            _userService = userService;
-        }
-
         // GET: api/Users
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<UserResponseDto>), StatusCodes.Status200OK)]
@@ -72,17 +64,6 @@ namespace TodoList.API.Controllers
 
             return NoContent();
 
-        }
-
-        // POST: api/Users
-        [HttpPost]
-        [ProducesResponseType(typeof(User), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<User>> PostUser([FromBody] User user)
-        {
-            // TODO
-            return Created();
         }
 
         // DELETE: api/Users/5
