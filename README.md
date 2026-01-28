@@ -6,7 +6,6 @@
 [![JWT](https://img.shields.io/badge/JWT-Auth-000000?logo=jsonwebtokens)](https://jwt.io/)
 [![Argon2](https://img.shields.io/badge/Argon2id-Hashing-brightgreen)](https://www.argon2.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 Une API RESTful moderne et **sécurisée** pour la gestion de tâches (Todo List) construite avec ASP.NET Core 10.0, suivant les principes de **Clean Architecture** et les meilleures pratiques de développement.
 
@@ -25,20 +24,6 @@ Ce projet démontre :
 - ✅ **Configuration CORS** sécurisée
 - ✅ **API Documentation** avec Scalar + Bearer Authentication
 
-## 📋 Table des Matières
-
-- [Architecture](#-architecture)
-- [Technologies Utilisées](#-technologies-utilisées)
-- [Structure du Projet](#-structure-du-projet)
-- [Modèles de Données](#-modèles-de-données)
-- [Endpoints API](#-endpoints-api)
-- [Sécurité](#-sécurité)
-- [Installation et Configuration](#-installation-et-configuration)
-- [Utilisation de l'API](#-utilisation-de-lapi)
-- [Concepts Clés](#-concepts-clés)
-- [Fonctionnalités à Venir](#-fonctionnalités-à-venir)
-- [Contribution](#-contribution)
-
 ## 🏗️ Architecture
 
 Ce projet suit les principes de **Clean Architecture** (architecture en couches) pour garantir :
@@ -50,7 +35,7 @@ Ce projet suit les principes de **Clean Architecture** (architecture en couches)
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    API Layer (TodoList.API)             │
-│          Controllers, Middleware, Config                │
+│            Controllers, Middleware, Config              │
 └────────────────────┬────────────────────────────────────┘
                      │ Depends on ↓
 ┌─────────────────────────────────────────────────────────┐
@@ -106,15 +91,15 @@ TodoList/
 │
 ├── 📂 TodoList.API/                    # Couche Présentation
 │   ├── Controllers/                    # Contrôleurs API
-│   │   ├── AuthController.cs          # 🆕 Authentification (Register/Login)
+│   │   ├── AuthController.cs          # Authentification (Register/Login)
 │   │   ├── TodosController.cs         # CRUD pour les tâches + [Authorize]
 │   │   └── UsersController.cs         # CRUD pour les utilisateurs + [Authorize(Roles="Admin")]
 │   │
-│   ├── Extensions/                     # 🆕 Extensions de configuration
+│   ├── Extensions/                     # Extensions de configuration
 │   │   ├── CorsPolicyExtensions.cs    # Configuration CORS
 │   │   └── JwtAuthenticationExtensions.cs # Configuration JWT
 │   │
-│   ├── Scalar/                         # 🆕 Configuration Scalar
+│   ├── Scalar/                         # Configuration Scalar
 │   │   └── BearerSecuritySchemeTransformer.cs # Intégration Bearer Token dans Scalar
 │   │
 │   ├── Properties/
@@ -126,7 +111,7 @@ TodoList/
 │   └── Program.cs                     # Point d'entrée + DI + Middleware
 │
 ├── 📂 TodoList.Core/                   # Couche Application
-│   ├── DTOs/                          # 🆕 Data Transfer Objects
+│   ├── DTOs/                          # Data Transfer Objects
 │   │   ├── Requests/
 │   │   │   ├── AddTodoRequestDto.cs
 │   │   │   ├── LoginRequestDto.cs
@@ -136,7 +121,7 @@ TodoList/
 │   │       ├── LoginResponseDto.cs
 │   │       └── UserResponseDto.cs
 │   │
-│   ├── Mappers/                       # 🆕 Conversion Entity ↔ DTO
+│   ├── Mappers/                       # Conversion Entity ↔ DTO
 │   │   ├── TodoMapperExtensions.cs
 │   │   └── UserMapperExtensions.cs
 │   │
@@ -150,23 +135,23 @@ TodoList/
 │   │       ├── IBaseService.cs
 │   │       ├── ITodoService.cs
 │   │       ├── IUserService.cs
-│   │       ├── Auth/                  # 🆕 Services d'authentification
+│   │       ├── Auth/                  # Services d'authentification
 │   │       │   ├── IAuthService.cs
 │   │       │   └── IJwtService.cs
-│   │       └── Tools/                 # 🆕 Services utilitaires
+│   │       └── Tools/                 # Services utilitaires
 │   │           └── IPasswordHasherService.cs
 │   │
 │   ├── Services/
 │   │   ├── Data/                      # Services métier
 │   │   │   ├── TodoService.cs
 │   │   │   └── UserService.cs
-│   │   ├── Auth/                      # 🆕 Services d'authentification
+│   │   ├── Auth/                      # Services d'authentification
 │   │   │   ├── AuthService.cs         # Register + Login
 │   │   │   └── JwtService.cs          # Génération JWT
-│   │   └── Tools/                     # 🆕 Services utilitaires
+│   │   └── Tools/                     # Services utilitaires
 │   │       └── PasswordHasherService.cs # Argon2id
 │   │
-│   └── ServiceExtensions.cs           # 🆕 Configuration DI pour Core
+│   └── ServiceExtensions.cs           # Configuration DI pour Core
 │
 ├── 📂 TodoList.Domain/                 # Couche Domaine
 │   ├── Entities/
@@ -195,7 +180,7 @@ TodoList/
     │   ├── TodoRepository.cs
     │   └── UserRepository.cs
     │
-    └── ServiceExtensions.cs           # 🆕 Configuration DI pour Infrastructure
+    └── ServiceExtensions.cs           # Configuration DI pour Infrastructure
 ```
 
 ## 🗄️ Modèles de Données
@@ -207,7 +192,7 @@ public class User
 {
     public Guid Id { get; set; }
     public string Email { get; set; }            // Format validé en DB
-    public string Password { get; set; }         // 🆕 Hashé avec Argon2id
+    public string Password { get; set; }         // Hashé avec Argon2id
     public UserRole Role { get; set; }           // User ou Admin
     public string? Lastname { get; set; }
     public string? Firstname { get; set; }
@@ -1255,6 +1240,7 @@ public static class UserMapperExtensions
 Relation : Users.Id (1) ←──→ (N) Todos.UserId
 Cascade Delete : Activé
 ```
+
 
 ## 📝 Licence
 
