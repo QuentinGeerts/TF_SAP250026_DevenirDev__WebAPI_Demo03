@@ -17,5 +17,6 @@ public static class ServiceExtensions
         services.AddScoped<ITodoService, TodoService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPasswordHasherService, PasswordHasherService>();
+        services.AddScoped<IJwtService, JwtService>();
     }
 }

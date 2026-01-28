@@ -1,11 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using TodoList.Core.DTOs.Requests;
 using TodoList.Core.Interfaces.Services;
+using TodoList.Core.Mappers;
 using TodoList.Domain.Entities;
 
 namespace TodoList.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class TodosController(ITodoService _todoService) : ControllerBase
 {
 
@@ -44,10 +49,18 @@ public class TodosController(ITodoService _todoService) : ControllerBase
     [ProducesResponseType(typeof(Todo), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Todo>> PostTodo([FromBody] Todo todo)
+    public async Task<ActionResult<Todo>> PostTodo([FromBody] AddTodoRequestDto todo)
     {
-        // TODO
-        return Created();
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var userId = GetCurrentUser();
+        if (userId == null)
+            return Unauthorized();
+
+        var createdTodo = await _todoService.CreateAsync(todo.ToTodo((Guid)userId));
+
+        return CreatedAtAction(nameof(GetTodo), new { id = createdTodo.Id }, createdTodo);
     }
 
     [HttpDelete("{id}")]
@@ -66,5 +79,11 @@ public class TodosController(ITodoService _todoService) : ControllerBase
         {
             return NotFound(new { Error = ex.Message });
         }
+    }
+
+    private Guid? GetCurrentUser ()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        return Guid.TryParse(userIdClaim, out var userId) ? userId : null;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using TodoList.Core.DTOs.Requests;
+using TodoList.Core.DTOs.Responses;
 using TodoList.Core.Interfaces.Repositories;
 using TodoList.Core.Interfaces.Services.Auth;
 using TodoList.Core.Interfaces.Services.Tools;
@@ -9,9 +10,22 @@ namespace TodoList.Core.Services.Auth;
 
 public class AuthService (
     IUserRepository _userRepository,
-    IPasswordHasherService _passwordHasherService
+    IPasswordHasherService _passwordHasherService,
+    IJwtService _jwtService
     ) : IAuthService
 {
+    public async Task<LoginResponseDto> Login(LoginRequestDto credentials)
+    {
+        if (string.IsNullOrWhiteSpace(credentials.Email) || string.IsNullOrWhiteSpace(credentials.Password))
+            throw new ArgumentException("Email et mot de passe sont requis");
+
+        var user = await _userRepository.GetUserByEmail(credentials.Email);
+        if (user == null || !_passwordHasherService.VerifyPassword(credentials.Password, user.Password))
+            throw new UnauthorizedAccessException("Email ou mot de passe incorrect");
+
+        return await _jwtService.GenerateToken(user);
+    }
+
     public async Task<User> Register(RegisterRequestDto credentials)
     {
         var existingUser = await _userRepository.GetUserByEmail(credentials.Email);

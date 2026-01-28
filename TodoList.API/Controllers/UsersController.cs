@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TodoList.API.Mappers;
 using TodoList.Core.DTOs.Requests;
 using TodoList.Core.DTOs.Responses;
@@ -14,6 +15,7 @@ namespace TodoList.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class UsersController(IUserService _userService) : ControllerBase
     {
         // GET: api/Users

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using TodoList.API.Extensions;
+using TodoList.API.Scalar;
 using TodoList.Core;
 using TodoList.Infrastructure;
 
@@ -13,8 +14,12 @@ builder.Services.ConfigureInfrastructure(builder.Configuration);
 // Configuration des cors
 builder.Services.ConfigureCorsPolicy(builder.Configuration);
 
+// Configuration de l'authentification JWT et de l'autorisation
+builder.Services.ConfigureJwTAuthentication(builder.Configuration);
+builder.Services.AddAuthorization();
+
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options => options.AddDocumentTransformer<BearerSecuritySchemeTransformer>());
 
 var app = builder.Build();
 
@@ -27,7 +32,11 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("CorsPolicy"); // Permet d'utiliser les CORS
-app.UseAuthorization();
+
+app.UseAuthentication(); // Permet d'utiliser le pipeline d'authentification
+app.UseAuthorization(); // Ordre important: UseAuthentication => UseAuthorization
+// Vérification de qui est l'utilisateur, on vérifie ses droits avant de lui permettre d'accéder aux ressources
+
 app.MapControllers();
 
 app.Run();

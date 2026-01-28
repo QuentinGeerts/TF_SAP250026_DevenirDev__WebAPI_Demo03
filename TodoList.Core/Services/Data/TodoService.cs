@@ -6,10 +6,9 @@ namespace TodoList.Core.Services.Data;
 
 public class TodoService(ITodoRepository _todoRepository) : ITodoService
 {
-    public async Task<Todo> CreateAsync(Todo user)
+    public async Task<Todo> CreateAsync(Todo todo)
     {
-        // TODO
-        throw new NotImplementedException();
+        return await _todoRepository.AddAsync(todo);
     }
 
     public async Task DeleteAsync(Guid id)

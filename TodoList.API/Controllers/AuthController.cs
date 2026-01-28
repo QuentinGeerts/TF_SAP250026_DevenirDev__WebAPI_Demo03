@@ -1,16 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TodoList.Core.DTOs.Requests;
-using TodoList.Core.Interfaces.Services;
+using TodoList.Core.DTOs.Responses;
 using TodoList.Core.Interfaces.Services.Auth;
 
 namespace TodoList.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AuthController(
-    IAuthService _authService,
-    IUserService _userService
-    ) : ControllerBase
+public class AuthController(IAuthService _authService) : ControllerBase
 {
 
     [HttpPost("register")]
@@ -33,6 +30,23 @@ public class AuthController(
         catch (Exception ex)
         {
             return Conflict(new { ex.Message });
+        }
+    }
+
+    [HttpPost("login")]
+    public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginRequestDto request)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var loginResponse = await _authService.Login(request);
+            return Ok(loginResponse);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { ex.Message });
         }
     }
 
